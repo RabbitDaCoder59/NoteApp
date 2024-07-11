@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Nunito", sans-serif;
+}
+.App {
+  @apply w-full h-full min-h-screen lg:h-full lg:overflow-auto bg-bgColors;
+}
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.icon {
+  @apply text-2xl text-white;
+}
+input::placeholder {
+  @apply text-xl;
+}
+textarea::placeholder {
+  @apply text-xl;
+}
+textarea.Title::placeholder {
+  @apply text-3xl;
+}
+textarea::placeholder {
+  @apply text-2xl;
+}
+.card {
+  @apply max-w-sm w-[385px] h-[190px] rounded overflow-hidden shadow-lg;
+}
+
+/* login page */
+
+.inputs {
+  @apply mt-6 flex flex-col gap-2;
+}
+
+.input {
+  @apply flex items-center m-auto w-thrice lg:w-100 h-20 bg-primary-300 rounded-md;
+}
+
+.input .icons {
+  @apply my-0 mx-3;
+}
+
+.input input {
+  @apply h-13 w-98 bg-transparent border-transparent outline-none text-primary-200 text-xl;
+}
+
+.submit {
+  @apply flex justify-center items-center w-36 lg:w-56 h-12 lg:h-16 text-white bg-primary-400 rounded-full lg:text-xl font-bold cursor-pointer;
+}
+
+/* profile page css */
+.upload {
+  width: 100px;
+  position: relative;
+  margin: auto;
+}
+
+.upload img {
+  border-radius: 50%;
+  border: 6px solid #eaeaea;
+}
+
+.upload .round {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #00b4ff;
+  width: 32px;
+  height: 32px;
+  line-height: 33px;
+  text-align: center;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.upload .round input[type="file"] {
+  position: absolute;
+  transform: scale(2);
+  opacity: 0;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  cursor: pointer;
+}
