@@ -6,7 +6,7 @@ import { LiaEdit } from "react-icons/lia";
 import { MdDelete } from "react-icons/md";
 import { NotesContext } from "../context/NotesContext";
 import { ToastContainer, toast } from "react-toastify"; // Import toast
-
+import BASE_URL from "../utils/url";
 const Notes = () => {
   const { fetchNotes } = useContext(NotesContext);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Notes = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/notes/note/${id}`, {
+      .get(`${BASE_URL}/notes/note/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -40,7 +40,7 @@ const Notes = () => {
 
   const handleSave = () => {
     axios
-      .put(`http://localhost:3001/notes/note/${id}`, note, {
+      .put(`${BASE_URL}/notes/note/${id}`, note, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -58,7 +58,7 @@ const Notes = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:3001/notes/note/${id}`, {
+      .delete(`${BASE_URL}/notes/note/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from "react";
 import axios from "axios";
+import BASE_URL from "../utils/url";
 
 export const NotesContext = createContext();
 
@@ -16,7 +17,7 @@ export const NotesProvider = ({ children }) => {
     try {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(
-        `http://localhost:3001/notes/${userId}`,
+        `${BASE_URL}/notes/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -36,7 +37,7 @@ export const NotesProvider = ({ children }) => {
   const addNote = useCallback(
     async (newNote) => {
       try {
-        const response = await axios.post("http://localhost:3001/notes", newNote, {
+        const response = await axios.post(`${BASE_URL}//notes`, newNote, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },

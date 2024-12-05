@@ -8,7 +8,7 @@ import * as yup from "yup";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import BASE_URL from "../utils/url";
 
 import { useNavigate } from "react-router-dom";
 
@@ -45,7 +45,7 @@ const EditProfile = () => {
     try {
       // Update password
       const response = await axios.put(
-        "http://localhost:3001/auth/editProfile",
+        `${BASE_URL}/auth/editProfile`,
         data,
         {
           headers: {
@@ -83,7 +83,7 @@ const EditProfile = () => {
 
       try {
         const response = await axios.put(
-          "http://localhost:3001/auth/uploadProfileImage",
+          `${BASE_URL}/auth/uploadProfileImage`,
           formData,
           {
             headers: {

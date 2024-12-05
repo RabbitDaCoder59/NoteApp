@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
 import axios from "axios";
+import BASE_URL from "../utils/url";
 const Profile = () => {
   const userId = localStorage.getItem("userId");
   const [username, setUsername] = useState("");
@@ -12,7 +13,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/auth/userInfo/${userId}`, {
+      .get(`${BASE_URL}/auth/userInfo/${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -40,7 +41,7 @@ const Profile = () => {
           <img
             src={
               profileImage
-                ? `http://localhost:3001/uploads/${profileImage}`
+                ? `${BASE_URL}/uploads/${profileImage}`
                 :"../../src/assets/noprofil.jpg"
             }
             alt="Profile"

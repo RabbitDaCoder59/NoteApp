@@ -8,7 +8,7 @@ import FormErrMsg from "../FormErrMsg";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import BASE_URL from "../../utils/url"; 
 // Validation schema
 const schema = yup.object().shape({
   username: yup.string().required("Username is required"),
@@ -39,7 +39,7 @@ const Login = () => {
 
   const submitForm = (data) => {
     axios
-      .post("http://localhost:3001/auth/login", data)
+      .post(`${BASE_URL}/auth/login`, data)
       .then((response) => {
         if (response.data.error) {
           console.log(response.data.error);

@@ -9,7 +9,7 @@ import FormErrMsg from "../FormErrMsg";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import BASE_URL from "../../utils/url";
 const schema = yup
   .object()
   .shape({
@@ -38,7 +38,7 @@ const Signup = () => {
 
   const submitForm = async (data) => {
     try {
-      const response = await axios.post("http://localhost:3001/auth", data);
+      const response = await axios.post(`${BASE_URL}/auth`, data);
       console.log(response.data);
       toast.success("Created account successfully!");
 

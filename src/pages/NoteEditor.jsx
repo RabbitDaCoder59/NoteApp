@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaChevronLeft, FaSave } from "react-icons/fa";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify"; // Import toast
-
+import BASE_URL from "../utils/url";
 const NoteEditor = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -25,7 +25,7 @@ const NoteEditor = () => {
       }
   
       await axios.post(
-        "http://localhost:3001/notes",
+        `${BASE_URL}/notes`,
         { title, content, userId },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
