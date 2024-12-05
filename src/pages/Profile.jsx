@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
 import axios from "axios";
-
 const Profile = () => {
   const userId = localStorage.getItem("userId");
   const [username, setUsername] = useState("");
@@ -42,10 +41,10 @@ const Profile = () => {
             src={
               profileImage
                 ? `http://localhost:3001/uploads/${profileImage}`
-                : "https://via.placeholder.com/100"
+                :"../../src/assets/noprofil.jpg"
             }
             alt="Profile"
-            className="rounded-full w-24 h-24 mb-2"
+            className="rounded-full object-cover w-24 h-24 mb-2"
           />
           <button className="bg-black text-white py-1 px-4 rounded">
             <Link to="/editprofile">Edit Profile</Link>

@@ -6,16 +6,13 @@ import React, {
   useContext,
 } from "react";
 import axios from "axios";
-import { useLoading } from "./LoadingContext";
 
 export const NotesContext = createContext();
 
 export const NotesProvider = ({ children }) => {
   const [notes, setNotes] = useState([]);
-  const { setLoading } = useLoading(); // This should now work as the LoadingProvider is wrapping the component tree
 
   const fetchNotes = useCallback(async () => {
-    setLoading(true);
     try {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(
@@ -29,30 +26,29 @@ export const NotesProvider = ({ children }) => {
       setNotes(response.data);
     } catch (error) {
       console.error("Error fetching notes:", error);
-    } finally {
-      setLoading(false);
     }
-  }, [setLoading]);
+  }, []);
+
+  useEffect(() => {
+    fetchNotes(); // Fetch notes when the component mounts
+  }, [fetchNotes]);
 
   const addNote = useCallback(
     async (newNote) => {
       try {
-        await axios.post("http://localhost:3001/notes", newNote, {
+        const response = await axios.post("http://localhost:3001/notes", newNote, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
-        fetchNotes();
+        setNotes((prevNotes) => [...prevNotes, response.data]); // Optimistic update
+        fetchNotes(); // Re-fetch notes to ensure you have the latest data
       } catch (error) {
         console.error("Error adding note:", error);
       }
     },
-    [fetchNotes]
+    [fetchNotes] // Make sure fetchNotes is available here
   );
-
-  useEffect(() => {
-    fetchNotes();
-  }, [fetchNotes]);
 
   return (
     <NotesContext.Provider value={{ notes, addNote, fetchNotes }}>

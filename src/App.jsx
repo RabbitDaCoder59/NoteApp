@@ -6,7 +6,7 @@ import Navbar from "./components/header/Navbar";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Editprofile from "./components/Editprofile";
-import Searchui from "./components/404";
+import PageNotFound  from "./components/PageNotFound ";
 import NoteEditor from "./pages/NoteEditor";
 import Notes from "./pages/Notes";
 import Login from "./components/auth/Login";
@@ -14,11 +14,8 @@ import Footer from "./components/footer/Footer";
 import Signup from "./components/auth/Signup";
 import PrivateRoute from "./routes/PrivateRoutes";
 import { NotesProvider } from "./context/NotesContext";
-import { LoadingProvider } from "./context/LoadingContext";
-
 const App = () => {
   return (
-    <LoadingProvider>
       <NotesProvider>
         <div className="App">
           <Router>
@@ -33,13 +30,12 @@ const App = () => {
                 <Route path="/notes/new" element={<NoteEditor />} />
                 <Route path="/notes/:id" element={<Notes />} />
               </Route>
-              <Route path="/*" element={<Searchui />} />
+              <Route path="/*" element={<PageNotFound  />} />
             </Routes>
             <Footer />
           </Router>
         </div>
       </NotesProvider>
-    </LoadingProvider>
   );
 };
 

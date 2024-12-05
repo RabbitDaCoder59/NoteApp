@@ -6,6 +6,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 import { useNavigate } from "react-router-dom";
 
 const schema = yup
@@ -13,15 +17,15 @@ const schema = yup
   .shape({
     oldPassword: yup
       .string()
-      .min(6, "Password must be at least 6 characters")
       .max(17, "Password cannot exceed 17 characters")
       .required("Password is required"),
     newPassword: yup
       .string()
-      .min(6, "New Password must be at least 6 characters")
+
       .max(17, "New Password cannot exceed 17 characters")
       .required("New Password is required"),
   })
+
   .required();
 
 const EditProfile = () => {
@@ -32,6 +36,7 @@ const EditProfile = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -48,39 +53,27 @@ const EditProfile = () => {
           },
         }
       );
+  
       if (response.data.error) {
-        console.log(response.data.error);
+        // Show server-provided error message
+        toast.error(response.data.error);
       } else {
-        console.log("password updated successfully");
-        navigator("/");
+        // Show success message for profile update
+        toast.success("Profile updated successfully!");
+        navigate("/"); // Redirect after success
       }
-
-      // Upload profile image
-      if (selectedFile) {
-        const formData = new FormData();
-        formData.append("profileImage", selectedFile);
-
-        const uploadResponse = await axios.put(
-          "http://localhost:3001/auth/uploadProfileImage",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        if (uploadResponse.data.error) {
-          console.log(uploadResponse.data.error);
-        } else {
-          console.log("Profile image uploaded successfully");
-        }
-      }
+  
+ 
     } catch (error) {
+      // Handle unexpected errors
+      const errorMessage =
+        error.response?.data?.error;
+      toast.error(errorMessage); // Display error message in toast
+      reset();
       console.error("There was an error updating the profile:", error);
     }
   };
+  
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -104,6 +97,7 @@ const EditProfile = () => {
           console.log(response.data.message);
           const imageUrl = URL.createObjectURL(file);
           setProfileImage(imageUrl);
+          toast.success("Profile picture Uploaded!");
         }
       } catch (error) {
         console.error("Error uploading profile image:", error);
@@ -126,7 +120,10 @@ const EditProfile = () => {
                 type="file"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 onChange={handleImageUpload}
+                aria-label="Upload Profile Image"
+                data-testid="file-input"
               />
+
               <FaCamera className="text-3xl" />
             </div>
           </div>
@@ -138,8 +135,11 @@ const EditProfile = () => {
           onSubmit={handleSubmit(updateForm)}
         >
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Old Password</label>
+            <label htmlFor="oldPassword" className="block text-gray-700 mb-2">
+              Old Password
+            </label>
             <input
+              id="oldPassword"
               type="password"
               name="oldPassword"
               placeholder="***************"
@@ -149,8 +149,11 @@ const EditProfile = () => {
             <FormErrMsg errors={errors} inputName="oldPassword" />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2">New Password</label>
+            <label htmlFor="newPassword" className="block text-gray-700 mb-2">
+              New Password
+            </label>
             <input
+              id="newPassword"
               type="password"
               name="newPassword"
               placeholder="***************"
@@ -167,6 +170,13 @@ const EditProfile = () => {
           </button>
         </form>
       </main>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar={true}
+        draggable
+      />
     </div>
   );
 };

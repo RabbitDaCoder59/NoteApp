@@ -3,7 +3,7 @@ import Ilustration1 from "../../src/assets/home.png";
 const Emptynote = () => {
   return (
     <div className="noContent mb-6">
-      <div className="img flex lg:py-28 md:py-0 justify-center items-center">
+      <div className="img flex lg:py-0 md:py-0 justify-center items-center">
         <img
           src={Ilustration1}
           alt="Ilustration1"

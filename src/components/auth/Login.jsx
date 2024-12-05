@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useForm } from "react-hook-form";
@@ -6,7 +6,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import FormErrMsg from "../FormErrMsg";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+// Validation schema
 const schema = yup.object().shape({
   username: yup.string().required("Username is required"),
   password: yup
@@ -18,11 +21,21 @@ const schema = yup.object().shape({
 
 const Login = () => {
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
+
+  // Show toast on page load if a signup success message is stored in localStorage
+  useEffect(() => {
+    const successMessage = localStorage.getItem("signupSuccessMessage");
+    if (successMessage) {
+      toast.success(successMessage);
+      localStorage.removeItem("signupSuccessMessage");
+    }
+  }, []);
 
   const submitForm = (data) => {
     axios
@@ -34,11 +47,16 @@ const Login = () => {
           const { accessToken, id } = response.data;
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("userId", id);
-          navigate("/");
+
+          // Set the login success flag to show the toast in Home
+          localStorage.setItem("loginSuccess", "true");
+
+          navigate("/"); // Navigate to Home page after successful login
         }
       })
       .catch((error) => {
         console.error("Error logging in:", error);
+        toast.error("Error couldn't Log In. Please try again.");
       });
   };
 
@@ -71,7 +89,7 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                placeholder="password"
+                placeholder="Password"
                 {...register("password")}
               />
             </div>
@@ -90,6 +108,15 @@ const Login = () => {
           </div>
         </form>
       </div>
+
+      {/* Toast container for toasts */}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar={true}
+        draggable
+      />
     </section>
   );
 };

@@ -7,6 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import FormErrMsg from "../FormErrMsg";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const schema = yup
   .object()
@@ -34,11 +36,23 @@ const Signup = () => {
     resolver: yupResolver(schema),
   });
 
-  const submitForm = (data) => {
-    axios.post("http://localhost:3001/auth", data).then(() => {
-      console.log(data);
+  const submitForm = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:3001/auth", data);
+      console.log(response.data);
+      toast.success("Created account successfully!");
+
+      // Store success message in localStorage
+      localStorage.setItem(
+        "signupSuccessMessage",
+        "Created account successfully!"
+      );
+
       navigate("/login");
-    });
+    } catch (error) {
+      console.error("Error signing up:", error);
+      toast.error("Error occurred during signup. Please try again.");
+    }
   };
 
   return (
@@ -105,6 +119,13 @@ const Signup = () => {
             <button type="submit" className="submit">
               Sign Up
             </button>
+            <ToastContainer
+              position="top-right"
+              autoClose={1000}
+              theme="colored"
+              hideProgressBar={true}
+              draggable
+            />
           </div>
         </form>
       </div>

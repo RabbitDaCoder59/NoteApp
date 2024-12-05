@@ -27,7 +27,7 @@ const Card = () => {
               </div>
             </div>
             <div className="px-6 pt-4 pb-2">
-              <span className="text-gray-500 text-sm">
+              <span className="text-gray-500 text-sm" data-testid="note-date">
                 {formatDate(note.date)}
               </span>
             </div>

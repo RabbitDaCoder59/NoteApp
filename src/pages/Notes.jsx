@@ -1,4 +1,3 @@
-// src/pages/Notes.jsx
 import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,8 +5,7 @@ import { FaChevronLeft, FaSave } from "react-icons/fa";
 import { LiaEdit } from "react-icons/lia";
 import { MdDelete } from "react-icons/md";
 import { NotesContext } from "../context/NotesContext";
-import { useLoading } from "../context/LoadingContext";
-import Loader from "../components/Loader";
+import { ToastContainer, toast } from "react-toastify"; // Import toast
 
 const Notes = () => {
   const { fetchNotes } = useContext(NotesContext);
@@ -15,10 +13,8 @@ const Notes = () => {
   const { id } = useParams();
   const [note, setNote] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const { loading, setLoading } = useLoading();
 
   useEffect(() => {
-    setLoading(true);
     axios
       .get(`http://localhost:3001/notes/note/${id}`, {
         headers: {
@@ -28,13 +24,11 @@ const Notes = () => {
       .then((response) => {
         setNote(response.data);
         console.log(response.data);
-        setTimeout(() => setLoading(false), 4000);
       })
       .catch((error) => {
         console.error("Error fetching note:", error);
-        setLoading(false);
       });
-  }, [id, setLoading]);
+  }, [id]);
 
   const handleEdit = (e) => {
     const { name, value } = e.target;
@@ -45,7 +39,6 @@ const Notes = () => {
   };
 
   const handleSave = () => {
-    setLoading(true);
     axios
       .put(`http://localhost:3001/notes/note/${id}`, note, {
         headers: {
@@ -55,16 +48,15 @@ const Notes = () => {
       .then(() => {
         fetchNotes();
         setIsEditing(false);
-        setTimeout(() => setLoading(false), 4000);
+        toast.success("Note saved successfully!");
       })
       .catch((error) => {
         console.error("Error saving note:", error);
-        setLoading(false);
+        toast.error("Failed to save the note.");
       });
   };
 
   const handleDelete = () => {
-    setLoading(true);
     axios
       .delete(`http://localhost:3001/notes/note/${id}`, {
         headers: {
@@ -74,25 +66,15 @@ const Notes = () => {
       .then(() => {
         fetchNotes();
         navigate("/");
-        setTimeout(() => setLoading(false), 4000);
+        // Set a flag in localStorage indicating note was deleted
+        localStorage.setItem("noteDeleted", "true");
       })
       .catch((error) => {
         console.error("Error deleting note:", error);
-        setLoading(false);
+        toast.error("Failed to delete the note.");
       });
   };
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <Loader />
-      </div>
-    );
-  }
-
-  if (!note) {
-    return <div>Loading...</div>;
-  }
+  
 
   return (
     <div className="flex flex-col h-full bg-bgColors text-white p-4">
@@ -101,14 +83,14 @@ const Notes = () => {
           <FaChevronLeft size={28} />
         </button>
         <div className="flex space-x-4">
-          <button onClick={() => setIsEditing(true)} className="text-green-500">
+          <button aria-label="edit" onClick={() => setIsEditing(true)} className="text-green-500">
             <LiaEdit size={32} />
           </button>
-          <button onClick={handleDelete} className="text-red-500">
+          <button aria-label="delete" onClick={handleDelete} className="text-red-500">
             <MdDelete size={32} />
           </button>
           {isEditing && (
-            <button onClick={handleSave} className="text-blue-500">
+            <button aria-label="Save" onClick={handleSave} className="text-blue-500">
               <FaSave size={28} />
             </button>
           )}
@@ -116,10 +98,11 @@ const Notes = () => {
       </div>
       <div className="flex-grow w-full h-100">
         <textarea
+          data-testid="note-title"
           type="text"
           name="title"
           placeholder="Title"
-          value={note.title}
+          value={note?.title}
           onChange={handleEdit}
           readOnly={!isEditing}
           className={`Title w-full h-22 bg-transparent font-bold text-2xl text-gray-400 focus:outline-none resize-none ${
@@ -129,7 +112,7 @@ const Notes = () => {
         <textarea
           name="content"
           placeholder="Type something..."
-          value={note.content}
+          value={note?.content}
           onChange={handleEdit}
           readOnly={!isEditing}
           className={`w-full h-full bg-transparent text-lg text-gray-400 focus:outline-none resize-none ${
@@ -137,6 +120,13 @@ const Notes = () => {
           }`}
         />
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar={true}
+        draggable
+      />
     </div>
   );
 };

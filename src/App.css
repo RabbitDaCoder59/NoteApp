@@ -6,7 +6,7 @@ body {
   font-family: "Nunito", sans-serif;
 }
 .App {
-  @apply w-full h-full min-h-screen lg:h-full lg:overflow-auto bg-bgColors;
+  @apply w-full lg:h-full  bg-bgColors;
 }
 .break-words {
   word-break: break-word;
