@@ -232,7 +232,7 @@ JWT_SECRET=your_jwt_secret
    ```
 2. Start the server:
    ```bash
-   npm start
+   npm run dev
    ```
 3. Make sure the MySQL server is running.
 
@@ -243,7 +243,7 @@ JWT_SECRET=your_jwt_secret
    ```
 2. Start the development server:
    ```bash
-   npm start
+   npm run dev
    ```
 
 ---
